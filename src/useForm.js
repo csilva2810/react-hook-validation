@@ -6,4 +6,10 @@ export function useForm({ validations }) {
   if (typeof validations !== 'object') {
     throw new Error('the option `validations` should be an object');
   }
+
+  function validateField(name, value) {}
+
+  return {
+    validateField,
+  };
 }

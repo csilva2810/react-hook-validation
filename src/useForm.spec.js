@@ -20,4 +20,20 @@ describe('useForm', () => {
       }).toThrow('the option `validations` should be an object');
     });
   });
+
+  describe('validateField', () => {
+    describe('required', () => {
+      it("should return a default error message for fields that don't have a value", () => {
+        const hook = useForm({
+          validations: {
+            name: {
+              required: true,
+            },
+          },
+        });
+
+        expect(hook.validateField('name', '')).toBe('required');
+      });
+    });
+  });
 });

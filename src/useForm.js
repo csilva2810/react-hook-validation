@@ -18,7 +18,7 @@ export function useForm({ validations }) {
         // now we validate the value checking if it has a value
         // we are using trim, to strip whitespaces before and after the value
         if (!value.trim()) {
-          return 'required';
+          return typeof rules.required === 'string' ? rules.required : 'required';
         }
       }
     }

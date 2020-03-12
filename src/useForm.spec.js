@@ -34,6 +34,18 @@ describe('useForm', () => {
 
         expect(hook.validateField('name', '')).toBe('required');
       });
+
+      it('should return a custom error message', () => {
+        const hook = useForm({
+          validations: {
+            name: {
+              required: 'the field "name" is required',
+            },
+          },
+        });
+
+        expect(hook.validateField('name', '')).toBe('the field "name" is required');
+      });
     });
   });
 });

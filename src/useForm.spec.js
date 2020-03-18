@@ -78,5 +78,53 @@ describe('useForm', () => {
         expect(hook.validateField('email', '')).toBe('Invalid e-mail');
       });
     });
+
+    describe('validate', () => {
+      let validateMock;
+      let hook;
+
+      beforeEach(() => {
+        validateMock = jest.fn((value) => {
+          if (Number(value) < 18) {
+            return 'You are not able to get a drive permission';
+          }
+
+          return '';
+        });
+
+        hook = useForm({
+          validations: {
+            age: {
+              validate: validateMock,
+            },
+          },
+        });
+      });
+
+      it('should execute the validate function passing the field value', () => {
+        hook.validateField('age', '10');
+
+        expect(validateMock).toHaveBeenCalledWith('10');
+      });
+
+      it('should be executed and return a string', () => {
+        hook.validateField('age', '10');
+
+        expect(validateMock).toHaveBeenCalled();
+        expect(typeof validateMock.mock.results[0].value).toBe('string');
+      });
+
+      it('should return an error message', () => {
+        hook.validateField('age', '10');
+
+        expect(validateMock.mock.results[0].value).toBe('You are not able to get a drive permission');
+      });
+
+      it('should return an empty string when value is valid', () => {
+        hook.validateField('age', '20');
+
+        expect(validateMock.mock.results[0].value).toBe('');
+      });
+    });
   });
 });

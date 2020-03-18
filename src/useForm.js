@@ -31,6 +31,17 @@ export function useForm({ validations }) {
           return rules.pattern.message || 'invalid';
         }
       }
+
+      // if it has a validation function and its type is a function
+      if (rules.validate && typeof rules.validate === 'function') {
+        // we run the validate function with the field value
+        const error = rules.validate(value);
+
+        // if an error message was returned, we return it
+        if (error) {
+          return error;
+        }
+      }
     }
 
     // if there are no erros, we return an empty string

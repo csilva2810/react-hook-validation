@@ -21,6 +21,16 @@ export function useForm({ validations }) {
           return typeof rules.required === 'string' ? rules.required : 'required';
         }
       }
+
+      // if the pattern rule is registered
+      if (rules.pattern) {
+        // we execute the regex
+        if (!new RegExp(rules.pattern.value).exec(value)) {
+          // if the value does not match with the regex pattern, we try to return
+          // the custom message and fallback to the default message in case
+          return rules.pattern.message || 'invalid';
+        }
+      }
     }
 
     // if there are no erros, we return an empty string

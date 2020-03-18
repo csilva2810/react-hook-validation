@@ -47,5 +47,36 @@ describe('useForm', () => {
         expect(hook.validateField('name', '')).toBe('the field "name" is required');
       });
     });
+
+    describe('pattern', () => {
+      it('should return an error message if the value does not satisfy the pattern', () => {
+        const hook = useForm({
+          validations: {
+            email: {
+              pattern: {
+                value: /\w+@\w+\.com/gi,
+              },
+            },
+          },
+        });
+
+        expect(hook.validateField('email', '')).toBe('invalid');
+      });
+
+      it('should return an custom error message if the message attribute exists', () => {
+        const hook = useForm({
+          validations: {
+            email: {
+              pattern: {
+                value: /\w+@\w+\.com/gi,
+                message: 'Invalid e-mail',
+              },
+            },
+          },
+        });
+
+        expect(hook.validateField('email', '')).toBe('Invalid e-mail');
+      });
+    });
   });
 });

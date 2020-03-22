@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 export function useForm({ validations }) {
   if (!validations) {
     throw new Error('the option `validations` is required');
@@ -6,6 +8,9 @@ export function useForm({ validations }) {
   if (typeof validations !== 'object') {
     throw new Error('the option `validations` should be an object');
   }
+
+  const [values, setValues] = useState({});
+  const [errors, setErrors] = useState({});
 
   function validateField(name, value) {
     // get the validation rules for the field
@@ -49,6 +54,8 @@ export function useForm({ validations }) {
   }
 
   return {
+    values,
+    errors,
     validateField,
   };
 }

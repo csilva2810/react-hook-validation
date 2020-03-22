@@ -1,3 +1,5 @@
+import { renderHook } from '@testing-library/react-hooks';
+
 import { useForm } from './useForm';
 
 describe('useForm', () => {
@@ -7,50 +9,54 @@ describe('useForm', () => {
     });
 
     it('should require the `validations` option', () => {
-      expect(() => {
-        useForm({});
-      }).toThrow('the option `validations` is required');
+      renderHook(() => {
+        expect(() => {
+          useForm({});
+        }).toThrow('the option `validations` is required');
+      });
     });
 
     it('should require the validation option to be an object', () => {
-      expect(() => {
-        useForm({
-          validations: true,
-        });
-      }).toThrow('the option `validations` should be an object');
+      renderHook(() => {
+        expect(() => {
+          useForm({
+            validations: true,
+          });
+        }).toThrow('the option `validations` should be an object');
+      });
     });
   });
 
   describe('validateField', () => {
     describe('required', () => {
       it("should return a default error message for fields that don't have a value", () => {
-        const hook = useForm({
+        const { result } = renderHook(() => useForm({
           validations: {
             name: {
               required: true,
             },
           },
-        });
+        }));
 
-        expect(hook.validateField('name', '')).toBe('required');
+        expect(result.current.validateField('name', '')).toBe('required');
       });
 
       it('should return a custom error message', () => {
-        const hook = useForm({
+        const { result } = renderHook(() => useForm({
           validations: {
             name: {
               required: 'the field "name" is required',
             },
           },
-        });
+        }));
 
-        expect(hook.validateField('name', '')).toBe('the field "name" is required');
+        expect(result.current.validateField('name', '')).toBe('the field "name" is required');
       });
     });
 
     describe('pattern', () => {
       it('should return an error message if the value does not satisfy the pattern', () => {
-        const hook = useForm({
+        const { result } = renderHook(() => useForm({
           validations: {
             email: {
               pattern: {
@@ -58,13 +64,13 @@ describe('useForm', () => {
               },
             },
           },
-        });
+        }));
 
-        expect(hook.validateField('email', '')).toBe('invalid');
+        expect(result.current.validateField('email', '')).toBe('invalid');
       });
 
       it('should return an custom error message if the message attribute exists', () => {
-        const hook = useForm({
+        const { result } = renderHook(() => useForm({
           validations: {
             email: {
               pattern: {
@@ -73,9 +79,9 @@ describe('useForm', () => {
               },
             },
           },
-        });
+        }));
 
-        expect(hook.validateField('email', '')).toBe('Invalid e-mail');
+        expect(result.current.validateField('email', '')).toBe('Invalid e-mail');
       });
     });
 
@@ -92,13 +98,15 @@ describe('useForm', () => {
           return '';
         });
 
-        hook = useForm({
+        const { result } = renderHook(() => useForm({
           validations: {
             age: {
               validate: validateMock,
             },
           },
-        });
+        }));
+
+        hook = result.current;
       });
 
       it('should execute the validate function passing the field value', () => {

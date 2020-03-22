@@ -3,13 +3,13 @@ import React, { useState } from 'react';
 import { useForm } from '../useForm';
 
 const SimpleForm = () => {
-  const [name, setName] = useState('');
+  const handleSubmit = e => {
+    e.preventDefault();
 
-  const handleSubmit = e => e.preventDefault();
+    console.log('values', values);
+  };
 
-  // create a state variable for the name validation errors
-  const [nameError, setNameError] = useState('');
-  const { validateField } = useForm({
+  const { values, errors, bindField } = useForm({
     validations: {
       name: {
         pattern: {
@@ -20,28 +20,12 @@ const SimpleForm = () => {
     }
   });
 
-  // handle change events in the name input
-  const handleNameChange = e => {
-    const { value } = e.target;
-
-    // set the name state with the field value
-    setName(value);
-    // validates the name field and sets the error state
-    setNameError(validateField('name', value));
-  };
-
   return (
     <form onSubmit={handleSubmit}>
       <div>
         <label htmlFor="name">name</label>
-        <input
-          type="text"
-          name="name"
-          id="name"
-          value={name}
-          onChange={handleNameChange}
-        />
-        {nameError && <p>{nameError}</p>}
+        <input type="text" name="name" id="name" {...bindField('name')} />
+        {errors.name && <p>{errors.name}</p>}
       </div>
     </form>
   );

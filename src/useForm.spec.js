@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react-hooks';
 
 import { useForm } from './useForm';
 
@@ -132,6 +132,69 @@ describe('useForm', () => {
         hook.validateField('age', '20');
 
         expect(validateMock.mock.results[0].value).toBe('');
+      });
+    });
+  });
+
+  describe('bindField', () => {
+    it('should validate the name parameter', () => {
+      const { result } = renderHook(() => useForm({
+        validations: {
+          name: {
+            required: true,
+          }
+        }
+      }));
+
+      expect(() => {
+        result.current.bindField();
+      }).toThrow('The field name parameter is required');
+
+      expect(() => {
+        result.current.bindField(1);
+      }).toThrow('The field name should be a string');
+    });
+
+    it('should return an object with value and onChange attributes', () => {
+      const { result } = renderHook(() => useForm({
+        validations: {
+          name: {
+            required: true,
+          }
+        }
+      }));
+
+      expect(result.current.bindField('name')).toEqual({
+        value: expect.any(String),
+        onChange: expect.any(Function),
+      });
+    });
+
+    describe('onChange', () => {
+      it('should update the Hook state when called', () => {
+        const { result } = renderHook(() => useForm({
+          validations: {
+            name: {
+              required: true,
+            },
+          },
+        }));
+
+        const bindFieldResult = result.current.bindField('name');
+
+        act(() => {
+          bindFieldResult.onChange({ target: { value: 'John' } });
+        });
+
+        expect(result.current.values.name).toBe('John');
+        expect(result.current.errors.name).toBe('');
+
+        act(() => {
+          bindFieldResult.onChange({ target: { value: '' } });
+        });
+
+        expect(result.current.values.name).toBe('');
+        expect(result.current.errors.name).toBe('required');
       });
     });
   });

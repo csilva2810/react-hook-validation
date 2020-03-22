@@ -53,9 +53,37 @@ export function useForm({ validations }) {
     return '';
   }
 
+  function bindField(name) {
+    if (!name) {
+      throw new Error('The field name parameter is required');
+    }
+
+    if (name && typeof name !== 'string') {
+      throw new Error('The field name should be a string');
+    }
+
+    return {
+      value: values[name] || '',
+      onChange: (e) => {
+        const { value } = e.target;
+
+        setValues(state => ({
+          ...state,
+          [name]: value,
+        }));
+
+        setErrors(state => ({
+          ...state,
+          [name]: validateField(name, value),
+        }));
+      },
+    }
+  }
+
   return {
     values,
     errors,
     validateField,
+    bindField,
   };
 }

@@ -84,10 +84,15 @@ export function useForm({ validations, initialValues = {} }) {
     }
   }
 
+  function isValid() {
+    return false;
+  }
+
   return {
     values,
     errors,
     validateField,
     bindField,
+    isValid,
   };
 }

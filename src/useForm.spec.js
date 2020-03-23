@@ -221,4 +221,14 @@ describe('useForm', () => {
       expect(result.current.values.name).toBe('Carlos');
     });
   });
+
+  describe('isValid', () => {
+    it('should be a function', () => {
+      const { result } = renderHook(() => useForm({
+        validations: {},
+      }));
+
+      expect(typeof result.current.isValid).toBe('function');
+    });
+  });
 });

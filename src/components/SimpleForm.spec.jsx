@@ -47,4 +47,31 @@ describe('<SimpleForm />', () => {
 
     expect(error).toBeInTheDocument();
   });
+
+  it('should keep the submit button disabled until all the inputs are valid', () => {
+    const { getByLabelText, getByRole } = render(<SimpleForm />);
+    const name = getByLabelText('name');
+    const birthDate = getByLabelText('birth date');
+    const submit = getByRole('button');
+
+    expect(submit).toBeDisabled();
+
+    fireEvent.change(name, {
+      target: { value: 'Carlos' }
+    });
+
+    expect(submit).toBeDisabled();
+
+    fireEvent.change(birthDate, {
+      target: { value: '30/12' }
+    });
+
+    expect(submit).toBeDisabled();
+
+    fireEvent.change(birthDate, {
+      target: { value: '30/12/2020' }
+    });
+
+    expect(submit).not.toBeDisabled();
+  });
 });

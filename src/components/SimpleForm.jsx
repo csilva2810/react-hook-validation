@@ -9,7 +9,7 @@ const SimpleForm = () => {
     console.log('values', values);
   };
 
-  const { values, errors, bindField } = useForm({
+  const { values, errors, bindField, isValid } = useForm({
     validations: {
       name: {
         pattern: {
@@ -44,6 +44,10 @@ const SimpleForm = () => {
         />
         {errors.birthDate && <p>{errors.birthDate}</p>}
       </div>
+
+      <button type="submit" disabled={!isValid()}>
+        submit
+      </button>
     </form>
   );
 };

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export function useForm({ validations }) {
+export function useForm({ validations, initialValues = {} }) {
   if (!validations) {
     throw new Error('the option `validations` is required');
   }
@@ -9,7 +9,11 @@ export function useForm({ validations }) {
     throw new Error('the option `validations` should be an object');
   }
 
-  const [values, setValues] = useState({});
+  if (typeof initialValues !== 'object') {
+    throw new Error('the option `initialValues` should be an object');
+  }
+
+  const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
 
   function validateField(name, value) {

@@ -198,4 +198,27 @@ describe('useForm', () => {
       });
     });
   });
+
+  describe('initialValues', () => {
+    it('should trhow an Error if the initialValues is not an object', () => {
+      renderHook(() => {
+        expect(() => {
+          useForm({
+            initialValues: true,
+          })
+        }).toThrow('the option `initialValues` should be an object');
+      });
+    });
+
+    it('should initialize the values state with the initial values', () => {
+      const { result } = renderHook(() => useForm({
+        initialValues: {
+          name: 'Carlos',
+        },
+        validations: {},
+      }));
+
+      expect(result.current.values.name).toBe('Carlos');
+    });
+  });
 });

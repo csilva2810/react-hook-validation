@@ -230,5 +230,56 @@ describe('useForm', () => {
 
       expect(typeof result.current.isValid).toBe('function');
     });
+
+    it('should return false when it finds any error on the form', () => {
+      const { result } = renderHook(() => useForm({
+        initialValues: {
+          name: 'Carlos',
+          surname: '',
+        },
+        validations: {
+          name: {
+            required: true,
+          },
+          surname: {
+            required: true,
+          },
+          birthDate: {
+            pattern: {
+              value: /^\d{2}\/\d{2}\/\d{4}$/gi,
+              message: 'invalid date',
+            },
+          },
+        },
+      }));
+
+      expect(result.current.isValid()).toBe(false);
+    });
+
+    it('should return true if all the form fields are valid', () => {
+      const { result } = renderHook(() => useForm({
+        initialValues: {
+          name: 'Carlos',
+          surname: 'Silva',
+          birthDate: '28/10/1990',
+        },
+        validations: {
+          name: {
+            required: true,
+          },
+          surname: {
+            required: true,
+          },
+          birthDate: {
+            pattern: {
+              value: /^\d{2}\/\d{2}\/\d{4}$/gi,
+              message: 'invalid date',
+            },
+          },
+        },
+      }));
+
+      expect(result.current.isValid()).toBe(true);
+    });
   });
 });

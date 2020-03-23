@@ -85,7 +85,11 @@ export function useForm({ validations, initialValues = {} }) {
   }
 
   function isValid() {
-    return false;
+    const hasErrors = Object.keys(validations).some(name =>
+      Boolean(validateField(name, values[name]))
+    );
+
+    return !hasErrors;
   }
 
   return {
